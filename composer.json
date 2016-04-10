@@ -1,0 +1,21 @@
+{
+    "name": "torresmateo/rest-counter",
+    "description": "a rest counter app",
+    "keywords": ["microframework","rest","router", "psr7"],
+    "homepage": "http://github.com/torresmateo/php-rest-counter",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Josh Lockhart",
+            "email": "info@joshlockhart.com",
+            "homepage": "http://www.joshlockhart.com/"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.0",
+        "slim/slim": "^3.1",
+        "slim/php-view": "^2.0",
+        "monolog/monolog": "^1.17",
+        "robmorgan/phinx": "^0.5.1"
+    }
+}
