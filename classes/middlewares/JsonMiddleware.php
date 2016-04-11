@@ -17,8 +17,6 @@ class JsonMiddleware
     {
         $method = $request->getMethod();
         $content_type = $request->getContentType();
-        $response->write($method);
-        $response->write($content_type);
         if(in_array($method, ['PUT', 'POST']) && $content_type != 'application/json'){
             return $response->withJson(['message' => 'content type must be application/json'],400);
         }

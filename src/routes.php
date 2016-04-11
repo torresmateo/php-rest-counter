@@ -29,9 +29,14 @@ $app->post('/{name}/{password}', function ($request, $response, $args) {
 
     $counter_mapper = new CounterMapper($this->db);
 
-    $counter = new CounterEntity(
-        ['name' => $args['name'], 'password' => $args['password']]
-    );
+    $data = $request->getParsedBody();
+    $this->logger->info(json_encode($data));
+    if(!isset($data)){
+        $data = [ 'value' => 0 ];
+    }
+    $data['name'] = $args['name'];
+    $data['password'] = $args['password'];
+    $counter = new CounterEntity($data);
 
     if($counter_mapper->getCounterByName($counter->getName())){
         return $response->withJson(
