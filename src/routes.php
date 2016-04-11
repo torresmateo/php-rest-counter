@@ -24,8 +24,7 @@ $app->get('/{name}', function($request, $response, $args) {
     }
 });
 
-$app->put('/{name}/{password}', function ($request, $response, $args) {
-    // Sample log message
+$app->post('/{name}/{password}', function ($request, $response, $args) {
     $this->logger->info('inserting new counter with name '. $args['name']);
 
     $counter_mapper = new CounterMapper($this->db);
@@ -46,9 +45,7 @@ $app->put('/{name}/{password}', function ($request, $response, $args) {
 });
 
 
-$app->post('/{name}/{password}', function ($request, $response, $args) {
-    $this->logger->info('post');
-
+$app->put('/{name}/{password}', function ($request, $response, $args) {
     //we assume everything is going to fail
     $return = ['message' => 'an error has occurred'];
     $code = 400;
@@ -59,16 +56,23 @@ $app->post('/{name}/{password}', function ($request, $response, $args) {
     if($data && isset($data['value'])){
         $counter = $counter_mapper->getCounterByCredentials($args['name'], $args['password']);
         if($counter){
+            $update = false;
             if($data['value'] === '+1'){
                 $counter->value++;
-                $counter_mapper->update($counter);
-                return $response->withJson($counter);
+                $update = true;
+            } else if($data['value'] === '-1'){
+                $counter->value--;
+                $update = true;
             } else if(is_int($data['value'])){
                 $counter->value = $data['value'];
+                $update = true;
+            } else {
+                $return['message'] = 'Not a valid value, it should be either an integer or a "+1" or "-1" string';
+            }
+
+            if($update){
                 $counter_mapper->update($counter);
                 return $response->withJson($counter);
-            } else {
-                $return['message'] = 'Not a valid value, it should be either an integer or a "+1" string';
             }
         }else{
             $return['message'] = 'The counter was not found, possibly due to bad credentials';
